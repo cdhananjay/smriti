@@ -5,4 +5,4 @@ const userRouter = express.Router();
 userRouter.get("/info/:username", getInfo);
 userRouter.get("/blogs/:username", getUserBlogs);
 
-export {userRouter};
+export { userRouter };

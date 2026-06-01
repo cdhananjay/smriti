@@ -3,17 +3,17 @@ import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth";
 
 export const requireAuth = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
+    req: Request,
+    res: Response,
+    next: NextFunction,
 ) => {
-  const session = await auth.api.getSession({
-    headers: fromNodeHeaders(req.headers),
-  });
-  if (session == null) {
-    return res
-      .status(401)
-      .json({ message: "user unathorized, register or login first" });
-  }
-  next();
+    const session = await auth.api.getSession({
+        headers: fromNodeHeaders(req.headers),
+    });
+    if (session == null) {
+        return res
+            .status(401)
+            .json({ message: "user unathorized, register or login first" });
+    }
+    next();
 };
