@@ -3,6 +3,7 @@ import type {Response, Request} from "express";
 import { toNodeHandler } from "better-auth/node";
 import { auth } from "./lib/auth";
 import morgan from "morgan";
+import cors from "cors";
 
 // Create a new express application instance
 const app = express();
@@ -10,6 +11,11 @@ const app = express();
 // Set the network port
 const port = process.env.PORT || 3000;
 
+
+app.use(cors({
+    origin: process.env.BETTER_AUTH_URL,
+    credentials: true
+}))
 app.use(morgan("dev"));
 
 app.all("/api/auth/{*any}", toNodeHandler(auth));
@@ -25,5 +31,6 @@ app.get("/", (req: Request, res: Response) => {
 
 // Start the Express server
 app.listen(port, () => {
-    console.log(`The server is running at http://localhost:${port}`);
+    console.log(`The server is running at http://localhost:${port} \n
+        frontend running at ${process.env.BETTER_AUTH_URL}`);
 });
