@@ -12,6 +12,16 @@ datasource db {
   provider = "postgresql"
 }
 
+model Blog {
+  id        String   @id @unique @default(uuid())
+  title     String
+  slug      String   @unique
+  content   String
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  createdAt DateTime @default(now())
+}
+
 model User {
   id            String    @id
   name          String
@@ -22,6 +32,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  blogs         Blog[]
 
   @@unique([email])
   @@map("user")
