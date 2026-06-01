@@ -35,7 +35,7 @@ export const createBlog = async (req: Request, res: Response) => {
       },
     });
 
-    return res.status(201).json({ blog, message: "blog created succesfully" });
+    return res.status(201).json({ slug: blog.slug, message: "blog created succesfully" });
   } catch (err) {
     console.error("FAILED TO CREATE BLOG", err);
     return res.status(500).json({ message: "failed to create blog" });
@@ -88,9 +88,18 @@ export const viewBlog = async (req: Request, res: Response) => {
       where: {
         slug: slug as string,
       },
-      include: {
-        author: true,
-      },
+      select: {
+        title : true,
+        content: true,
+        createdAt: true,
+        author: {
+          select: {
+            name: true,
+            image: true,
+            username: true
+          }
+        }
+      }
     });
     if (!blog) {
       return res.status(404).json({ message: "requested blog not found" });

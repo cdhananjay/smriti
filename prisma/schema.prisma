@@ -34,8 +34,12 @@ model User {
   accounts      Account[]
   blogs         Blog[]
 
+  username        String?
+  displayUsername String?
+
   @@unique([email])
   @@map("user")
+  @@unique([username])
 }
 
 model Session {
