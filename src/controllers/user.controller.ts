@@ -10,6 +10,11 @@ export const getInfo = async (req: Request, res: Response) => {
         const user = await prisma.user.findUnique({
             where: {
                 username: username as string
+            },
+            select: {
+                name: true,
+                image: true,
+                createdAt: true
             }
         })
         if (!user) {

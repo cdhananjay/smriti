@@ -43,9 +43,9 @@ export const createBlog = async (req: Request, res: Response) => {
 };
 
 export const deleteBlog = async (req: Request, res: Response) => {
-  const blogId = req.body;
+  const slug = req.params.slug;
 
-  if (!blogId) {
+  if (!slug) {
     return res.json(401).json({ message: "blog id not provided" });
   }
 
@@ -56,7 +56,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
   try {
     const blog = await prisma.blog.findUnique({
       where: {
-        id: blogId,
+        slug: slug as string,
         authorId: session!.user.id,
       },
     });
@@ -65,8 +65,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
     }
     await prisma.blog.delete({
       where: {
-        id: blogId,
-        authorId: session!.user.id,
+        id: blog.id,
       },
     });
     return res.status(200).json({ message: "blog deleted" });
