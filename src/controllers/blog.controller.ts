@@ -75,3 +75,29 @@ export const deleteBlog = async (req: Request, res: Response) => {
     return res.status(500).json({ message: "internal server error" });
   }
 };
+
+export const viewBlog = async (req: Request, res: Response) => {
+  const slug = req.params.slug;
+
+  if (!slug) {
+    return res.status(401).json({ message: "invalid url, blog not found" });
+  }
+
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        slug: slug as string,
+      },
+      include: {
+        author: true,
+      },
+    });
+    if (!blog) {
+      return res.status(404).json({ message: "requested blog not found" });
+    }
+    return res.status(200).json(blog);
+  } catch (err) {
+    console.log("ERROR FETCHING BLOG", err);
+    return res.status(501).json({ message: "internal server error" });
+  }
+};

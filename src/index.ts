@@ -5,7 +5,6 @@ import { auth } from "./lib/auth";
 import morgan from "morgan";
 import cors from "cors";
 import { blogRouter } from "./routes/blog.route";
-import { requireAuth } from "./middlewares/requireAuth.middleware";
 // Create a new express application instance
 const app = express();
 
@@ -25,7 +24,7 @@ app.all("/api/auth/{*any}", toNodeHandler(auth));
 // or only apply it to routes that don't interact with Better Auth
 app.use(express.json());
 
-app.use("/blog", requireAuth ,blogRouter);
+app.use("/api/blog",blogRouter);
 
 // Define the root path with a greeting message
 app.get("/", (req: Request, res: Response) => {

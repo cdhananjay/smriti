@@ -1,7 +1,10 @@
 import express from "express";
 const blogRouter = express.Router();
-import { createBlog, deleteBlog } from "../controllers/blog.controller";
+import { createBlog, deleteBlog, viewBlog } from "../controllers/blog.controller";
+import { requireAuth } from "../middlewares/requireAuth.middleware";
 
-blogRouter.post("/new",createBlog)
-blogRouter.delete("/delete", deleteBlog)
+blogRouter.post("/new", requireAuth, createBlog)
+blogRouter.delete("/delete", requireAuth, deleteBlog)
+blogRouter.get("/view/:slug", viewBlog)
+
 export {blogRouter};
