@@ -24,25 +24,54 @@ export const createBlog = async (req: Request, res: Response) => {
   const session = await auth.api.getSession({
     headers: fromNodeHeaders(req.headers),
   });
-    
-  if (!session || !session.user) { 
-    console.error("USER SESSION NOT FOUND EVEN AFTER PASSSING REQUIRE AUTH MIDDLE WARE")
-    return res.status(401).json({message: "user session not found. this should have never happened."})
-  }
-  
+
   try {
     const blog = await prisma.blog.create({
       data: {
         content,
         slug,
         title,
-        authorId: session.user.id,
-        }
-    })
-    
+        authorId: session!.user.id!,
+      },
+    });
+
     return res.status(201).json({ blog, message: "blog created succesfully" });
   } catch (err) {
     console.error("FAILED TO CREATE BLOG", err);
     return res.status(500).json({ message: "failed to create blog" });
+  }
+};
+
+export const deleteBlog = async (req: Request, res: Response) => {
+  const blogId = req.body;
+
+  if (!blogId) {
+    return res.json(401).json({ message: "blog id not provided" });
+  }
+
+  const session = await auth.api.getSession({
+    headers: fromNodeHeaders(req.headers),
+  });
+
+  try {
+    const blog = await prisma.blog.findUnique({
+      where: {
+        id: blogId,
+        authorId: session!.user.id,
+      },
+    });
+    if (!blog) {
+      return res.status(401).json({ message: "invalid blog id" });
+    }
+    await prisma.blog.delete({
+      where: {
+        id: blogId,
+        authorId: session!.user.id,
+      },
+    });
+    return res.status(200).json({ message: "blog deleted" });
+  } catch (err) {
+    console.error("FAILED TO DELETE BLOG");
+    return res.status(500).json({ message: "internal server error" });
   }
 };
