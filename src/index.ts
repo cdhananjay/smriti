@@ -5,7 +5,7 @@ import { auth } from "./lib/auth";
 import morgan from "morgan";
 import cors from "cors";
 import { blogRouter } from "./routes/blog.route";
-import { authorRouter } from "./routes/author.route";
+import { userRouter} from "./routes/user.route";
 // Create a new express application instance
 const app = express();
 
@@ -26,7 +26,7 @@ app.all("/api/auth/{*any}", toNodeHandler(auth));
 app.use(express.json());
 
 app.use("/api/blog",blogRouter);
-app.use("/api/user", authorRouter);
+app.use("/api/user", userRouter);
 
 // Define the root path with a greeting message
 app.get("/", (req: Request, res: Response) => {

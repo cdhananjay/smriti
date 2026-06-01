@@ -16,7 +16,7 @@ export const createBlog = async (req: Request, res: Response) => {
   const { title, content } = req.body;
 
   if (!title || !content) {
-    return res.status(401).json({ message: "Title and content is required." });
+    return res.status(400).json({ message: "Title and content is required." });
   }
 
   const slug = slugify(title, slugOptions) + "-" + Date.now();
@@ -46,7 +46,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
   const slug = req.params.slug;
 
   if (!slug) {
-    return res.json(401).json({ message: "blog id not provided" });
+    return res.json(400).json({ message: "blog id not provided" });
   }
 
   const session = await auth.api.getSession({
@@ -61,7 +61,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
       },
     });
     if (!blog) {
-      return res.status(401).json({ message: "invalid blog id" });
+      return res.status(400).json({ message: "invalid blog id" });
     }
     await prisma.blog.delete({
       where: {
@@ -79,7 +79,7 @@ export const viewBlog = async (req: Request, res: Response) => {
   const slug = req.params.slug;
 
   if (!slug) {
-    return res.status(401).json({ message: "invalid url, blog not found" });
+    return res.status(400).json({ message: "invalid url, blog not found" });
   }
 
   try {
