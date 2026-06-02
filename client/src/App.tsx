@@ -1,5 +1,4 @@
 import { useNavigate } from 'react-router';
-import './App.css';
 import { authClient } from './lib/auth-client';
 import { useContext } from 'react';
 import { UserContext } from './RequireAuth';
@@ -23,6 +22,9 @@ function App() {
 
     return (
         <>
+        <h1 className="text-3xl font-bold underline">
+            Hello world!
+        </h1>
             <h1>{session.data?.user.name}</h1>
             <button onClick={handleSignOut}>sign out</button>
         </>
