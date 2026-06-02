@@ -6,7 +6,7 @@ import remarkGfm from 'remark-gfm'
 import "./blog.css";
 import { toast } from 'sonner';
 import { Spinner } from './components/ui/spinner';
-
+import { Link } from 'react-router';
 type blogType = {
     createdAt: Date;
     title: string;
@@ -52,53 +52,43 @@ function BlogViewer() {
         {/* TITLE */}
         <header className="mb-3">
           <h1 className="text-4xl font-bold tracking-tight leading-tight">
-            {blog ? blog.title : "loading.."}
+            {blog.title}
           </h1>
 
           {/* AUTHOR CARD */}
           <div className="mt-6 flex items-center gap-4">
+            <Link to={`/user/${blog.author.username}`}>
             <img
-              src={blog ? blog.author.image || "/person.svg" : "/person.svg"}
-              alt={blog ? blog.author.name : "rick ashley"}
+              src={blog.author.image || "/person.svg"}
+              alt={`profile-pic-for-@${blog.author.username}`}
               className="h-12 w-12 rounded-full object-cover border border-border"
             />
-
+            </Link>
             <div className="flex flex-col">
+              <Link to={`/user/${blog.author.username}`}>
               <span className="font-medium text-sm">
-                {blog ? blog.author.name : "john doe"}
+                {blog.author.name}
               </span>
-
+              </Link>
+              <Link to={`/user/${blog.author.username}`}>
               <span className="text-sm text-muted-foreground">
-                @{blog ? blog.author.username : "johndoe67"}
+                @{blog.author.username}
               </span>
+              </Link>
             </div>
           </div>
         </header>
 
         {/* DIVIDER */}
-        <div className="mb-8 h-px w-full bg-border" />
+        <div className="mb-6 h-px w-full bg-border" />
 
         {/* CONTENT */}
         <div
         id='blog'
-          className="prose prose-neutral dark:prose-invert max-w-none
-                     prose-headings:font-semibold
-                     prose-p:leading-relaxed
-                     prose-p:mb-4
-                     prose-li:my-1
-                     prose-blockquote:border-l-primary
-                     prose-blockquote:bg-muted
-                     prose-blockquote:px-4
-                     prose-blockquote:py-2
-                     prose-code:bg-muted
-                     prose-code:px-1.5
-                     prose-code:py-0.5
-                     prose-code:rounded
-                     prose-pre:bg-muted
-                     prose-pre:text-foreground"
+          className="max-w-none"
         >
           <Markdown remarkPlugins={[remarkGfm]}>
-            {blog ? blog.content : "error" }
+            {blog.content}
           </Markdown>
         </div>
 
