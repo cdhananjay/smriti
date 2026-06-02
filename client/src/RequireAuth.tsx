@@ -2,7 +2,7 @@ import { Navigate, Outlet } from 'react-router';
 import { authClient } from './lib/auth-client';
 import { toast } from 'sonner';
 import { Spinner } from './components/ui/spinner';
-
+import Navbar from './components/Navbar';
 function RequireAuth() {
     const { data, error, isPending } = authClient.useSession();
 
@@ -21,7 +21,12 @@ function RequireAuth() {
         toast.info('login first to access the page');
         return <Navigate to={'/login'} />;
     }
-    return <Outlet />;
+    return (
+        <>
+            <Navbar />
+            <Outlet />
+        </>
+    );
 }
 
 export default RequireAuth;
