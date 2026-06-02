@@ -4,8 +4,8 @@ import { BrowserRouter, Route, Routes } from 'react-router';
 import './index.css';
 import App from './App.tsx';
 import RequireAuth from './RequireAuth.tsx';
-import SignIn from './pages/SignIn.tsx';
-import SignUp from './pages/SignUp.tsx';
+import Login from './Login.tsx';
+import Signup from './Signup.tsx';
 import { Toaster } from 'sonner';
 import BlogViewer from './BlogViewer.tsx';
 import axios from 'axios';
@@ -17,13 +17,14 @@ export const axiosInstance = axios.create({
     withCredentials: true,
     validateStatus: status => status < 500,
 });
+
 createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
             <Routes>
                 <Route path="/blog/:slug" element={<BlogViewer />} />
-                <Route path="/signin" element={<SignIn />} />
-                <Route path="/signup" element={<SignUp />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
                 <Route element={<RequireAuth />}>
                     <Route path="/" element={<App />} />
                     <Route path="/blog/new" element={<BlogCreator />} />

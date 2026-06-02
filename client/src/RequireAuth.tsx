@@ -1,33 +1,27 @@
 import { Navigate, Outlet } from 'react-router';
 import { authClient } from './lib/auth-client';
-import { createContext } from 'react';
 import { toast } from 'sonner';
-
-let UserContext;
+import { Spinner } from './components/ui/spinner';
 
 function RequireAuth() {
-    console.log('reached requireauth');
-    const { data, error, isPending, refetch, isRefetching } = authClient.useSession();
-    console.log(data, error, isPending, refetch);
-    UserContext = createContext({ data, error, isPending, refetch, isRefetching });
-    toast('reached /');
+    const { data, error, isPending } = authClient.useSession();
 
     if (isPending) {
-        return <h1>loading...</h1>;
+        return (
+            <div className="w-max h-max flex justify-center items-center">
+                <Spinner />
+            </div>
+        );
     }
     if (error) {
-        return <h1>error fetching session...</h1>;
+        toast.error('error fetching session');
+        return <p>try again later</p>;
     }
     if (!data) {
-        console.log('going /signin from requireauth');
-        return <Navigate to={'/signin'} />;
+        toast.info('login first to access the page');
+        return <Navigate to={'/login'} />;
     }
-    return (
-        <UserContext value={{ data, error, isPending, refetch, isRefetching }}>
-            <Outlet />
-        </UserContext>
-    );
+    return <Outlet />;
 }
 
 export default RequireAuth;
-export { UserContext };

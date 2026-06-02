@@ -1,32 +1,40 @@
 import { useNavigate } from 'react-router';
+import { Button } from './components/ui/button';
 import { authClient } from './lib/auth-client';
-import { useContext } from 'react';
-import { UserContext } from './RequireAuth';
+import { toast } from 'sonner';
 
 function App() {
-    const session: ReturnType<typeof authClient.useSession> = useContext(UserContext!);
     const navigate = useNavigate();
-
+    const session = authClient.useSession();
     console.log('reached home');
-    // const { data } = authClient.useSession();
+
     const handleSignOut = async () => {
-        await authClient.signOut({
+        let toastId;
+        const { error } = await authClient.signOut({
             fetchOptions: {
+                onRequest: () => {
+                    toastId = toast.loading('logging out..');
+                },
                 onSuccess: () => {
-                    console.log('signed out.. going /signin');
-                    navigate('/signin'); // redirect to login page
+                    toast.dismiss(toastId!);
+                    toast.success('logged out!');
+                    navigate('/login');
+                },
+                onError: ctx => {
+                    toast.dismiss(toastId!);
+                    toast.error(ctx.error.message);
                 },
             },
         });
+        if (error) {
+            toast.error('something went wrong...');
+        }
     };
 
     return (
         <>
-        <h1 className="text-3xl font-bold underline">
-            Hello world!
-        </h1>
-            <h1>{session.data?.user.name}</h1>
-            <button onClick={handleSignOut}>sign out</button>
+            <h1>hai {session.data?.user.name}</h1>
+            <Button onClick={handleSignOut}>sign out</Button>
         </>
     );
 }
