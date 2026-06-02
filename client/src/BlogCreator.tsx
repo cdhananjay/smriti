@@ -1,43 +1,49 @@
 import { useState } from 'react';
-import '@mdxeditor/editor/style.css';
-import {
-    MDXEditor,
-    headingsPlugin,
-    listsPlugin,
-    quotePlugin,
-    thematicBreakPlugin,
-} from '@mdxeditor/editor';
 import { toast } from 'sonner';
 import { axiosInstance } from './main';
 
-function BlogCreator() {
+import MarkdownIt from 'markdown-it';
+import MdEditor from 'react-markdown-editor-lite';
+// import style manually
+import 'react-markdown-editor-lite/lib/index.css';
+
+import { useNavigate } from 'react-router';
+
+const mdParser = new MarkdownIt(/* Markdown-it options */);
+
+export default function App() {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
+    const navigate = useNavigate();
+
+    function handleEditorChange({ html, text } : {html: string, text: string}) {
+        setContent(text);
+        console.log('handleEditorChange', html, text);
+    }
+
     const handleSubmit = async () => {
-        if (!title.trim()) toast.error('title is required');
-        console.log(title, content);
+        if (!title.trim()) return toast.error('Title is required');
+        if (!content) return toast.error("content cannot be empty");
         try {
             const { data, status } = await axiosInstance.post('/blog/new', {
-                title: title,
-                content: content,
+                title,
+                content,
             });
-            if (status == 201) toast('created');
-            else toast.error(data.message!);
-        } catch (err) {
-            toast.error('error submiting');
+
+            if (status === 201) { 
+                toast.success('Created');
+                navigate(`/blog/${data.slug!}`)
+            }
+        } catch (e) {
+            toast.error('Error submitting');
         }
     };
+
     return (
-        <>
-            <input placeholder="title" onChange={e => setTitle(e.target.value)}></input>
-            <MDXEditor
-                onChange={(markdown, _) => setContent(markdown)}
-                markdown="# Hello world"
-                plugins={[headingsPlugin(), listsPlugin(), quotePlugin(), thematicBreakPlugin()]}
-            />
+        <div>
+            <input placeholder="title" value={title} onChange={e => setTitle(e.target.value)} />
+            <MdEditor style={{ height: 'max' }} renderHTML={text => mdParser.render(text)} onChange={handleEditorChange} />
             <button onClick={handleSubmit}>submit</button>
-        </>
+        </div>
     );
 }
-
-export default BlogCreator;

@@ -36,7 +36,7 @@ export default function SignIn() {
                     },
                     onSuccess: _ => {
                         toast.dismiss(toastId!);
-                        toast.success("logged in");
+                        toast.success('logged in');
                         session.refetch();
                         navigate('/');
                         return;

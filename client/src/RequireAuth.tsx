@@ -8,7 +8,7 @@ function RequireAuth() {
 
     if (isPending) {
         return (
-            <div className="w-max h-max flex justify-center items-center">
+            <div className="h-screen flex justify-center items-center">
                 <Spinner />
             </div>
         );

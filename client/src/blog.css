@@ -1,0 +1,144 @@
+/* yeah i def wrote this myself */
+
+#blog {
+  max-width: 820px;
+  margin: 40px auto;
+  padding: 24px;
+
+  background: var(--background);
+  color: var(--foreground);
+
+  font-family: var(--font-sans);
+  line-height: 1.75;
+  font-size: 16px;
+}
+
+/* Headings */
+#blog h1,
+#blog h2,
+#blog h3,
+#blog h4,
+#blog h5 {
+  font-family: var(--font-heading);
+  color: var(--foreground);
+  line-height: 1.2;
+  margin-top: 1.2em;
+  margin-bottom: 0.5em;
+}
+
+#blog h1 { font-size: 2.2rem; }
+#blog h2 { font-size: 1.8rem; }
+#blog h3 { font-size: 1.5rem; }
+#blog h4 { font-size: 1.2rem; }
+#blog h5 { font-size: 1rem; color: var(--muted-foreground); }
+
+/* Paragraph */
+#blog p {
+  margin: 0.8em 0;
+}
+
+/* Text styles */
+#blog strong {
+  font-weight: 600;
+}
+
+#blog em {
+  color: var(--muted-foreground);
+}
+
+#blog s {
+  color: var(--muted-foreground);
+}
+
+/* Lists */
+#blog ul,
+#blog ol {
+  padding-left: 1.5rem;
+  margin: 1em 0;
+}
+
+#blog li {
+  margin: 0.4em 0;
+}
+
+/* Blockquote */
+#blog blockquote {
+  border-left: 4px solid var(--primary);
+  background: var(--muted);
+  padding: 0.75rem 1rem;
+  margin: 1em 0;
+  border-radius: var(--radius);
+  color: var(--muted-foreground);
+}
+
+/* Horizontal rule */
+#blog hr {
+  border: none;
+  height: 1px;
+  background: var(--border);
+  margin: 2em 0;
+}
+
+/* Inline code */
+#blog code {
+  background: var(--muted);
+  padding: 2px 6px;
+  border-radius: var(--radius-sm);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9em;
+}
+
+/* Code block */
+#blog pre {
+  background: var(--muted);
+  padding: 1rem;
+  border-radius: var(--radius-lg);
+  overflow-x: auto;
+  margin: 1.2em 0;
+}
+
+#blog pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Tables */
+#blog table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+#blog th,
+#blog td {
+  border: 1px solid var(--border);
+  padding: 10px;
+  text-align: left;
+}
+
+#blog th {
+  background: var(--muted);
+  font-weight: 600;
+}
+
+/* Images */
+#blog img {
+  max-width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  margin: 0.8em 0;
+  display: block;
+}
+
+/* Links */
+#blog a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+#blog a:hover {
+  text-decoration: underline;
+}
