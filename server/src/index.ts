@@ -7,6 +7,15 @@ import cors from "cors";
 import { blogRouter } from "./routes/blog.route";
 import { userRouter } from "./routes/user.route";
 import winston from "winston";
+import { rateLimit } from 'express-rate-limit'
+
+const limiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 minutes
+	limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+	standardHeaders: 'draft-8', // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+	legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+	ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+})
 
 const logFormat = winston.format.combine(
     winston.format.colorize(),
@@ -42,12 +51,13 @@ app.use(
         credentials: true,
     }),
 );
+
 app.use(morgan("dev"));
 app.all("/api/auth/{*any}", toNodeHandler(auth));
 // Mount express json middleware after Better Auth handler
 // or only apply it to routes that don't interact with Better Auth
 app.use(express.json());
-
+app.use(limiter)
 app.use("/api/blog", blogRouter);
 app.use("/api/user", userRouter);
 

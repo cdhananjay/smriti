@@ -61,6 +61,7 @@ export const getUserBlogs = async (req: Request, res: Response) => {
             skip: (page - 1) * limit,
             take: limit,
             select: {
+                createdAt: true,
                 title: true,
                 slug: true,
             },
