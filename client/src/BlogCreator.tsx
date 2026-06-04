@@ -24,7 +24,7 @@ export default function App() {
     const handleSubmit = async () => {
         if (!title.trim()) return toast.error('Title is required');
         if (!content) return toast.error('Content cannot be empty');
-
+        const toastId = toast.loading("creating...")
         try {
             const { data, status } = await axiosInstance.post('/blog/new', {
                 title,
@@ -35,8 +35,11 @@ export default function App() {
                 toast.success('Created');
                 navigate(`/blog/${data.slug}`);
             }
-        } catch {
+        } catch(err) {
+            console.log(err)
             toast.error('Error submitting');
+        } finally {
+            toast.dismiss(toastId);
         }
     };
 

@@ -7,6 +7,7 @@ import './blog.css';
 import { toast } from 'sonner';
 import { Spinner } from './components/ui/spinner';
 import { Link } from 'react-router';
+import Navbar from './components/Navbar';
 type blogType = {
     createdAt: Date;
     title: string;
@@ -19,10 +20,10 @@ type blogType = {
 } | null;
 
 function BlogViewer() {
-    let { slug } = useParams();
+    const { slug } = useParams();
     const [blog, setBlog] = useState<blogType>(null);
     useEffect(() => {
-        const fn = async () => {
+        const fetchBlog = async () => {
             try {
                 const { data, status } = await axiosInstance.get(`/blog/view/${slug}`);
                 if (status == 200) {
@@ -33,9 +34,10 @@ function BlogViewer() {
                 }
             } catch (err) {
                 toast.error('something went wrong');
+                console.log(err);
             }
         };
-        fn();
+        fetchBlog();
     }, []);
 
     if (blog === null) {
@@ -47,6 +49,8 @@ function BlogViewer() {
     }
 
     return (
+        <>
+        <Navbar/>
         <div className="min-h-screen bg-muted text-foreground">
             <article className="mx-auto max-w-3xl px-6 py-10">
                 {/* TITLE */}
@@ -94,6 +98,7 @@ function BlogViewer() {
                 </div>
             </article>
         </div>
+        </>
     );
 }
 

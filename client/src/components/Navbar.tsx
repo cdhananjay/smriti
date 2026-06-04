@@ -79,7 +79,7 @@ export default function Navbar() {
                     </Link>
 
                     <Link
-                        to={session.data ? `/user/${session.data.user.username}` : 'login'}
+                        to={session.data ? `/user/${session.data.user.username}` : '/login'}
                         className="rounded-md px-4 py-2 text-sm font-medium transition-colors hover:bg-muted"
                     >
                         <Avatar>
@@ -88,7 +88,7 @@ export default function Navbar() {
                         </Avatar>
                     </Link>
 
-                    <AlertDialogSmall onConfirm={handleSignOut} />
+                    {session.data?.user && <AlertDialogSmall onConfirm={handleSignOut} />}
                 </div>
             </div>
         </nav>
