@@ -29,7 +29,7 @@ function BlogViewer() {
                 if (status == 200) {
                     const blog = data as blogType;
                     setBlog(blog);
-                } else {
+                } else if (data.message) {
                     toast.error(data.message);
                 }
             } catch (err) {

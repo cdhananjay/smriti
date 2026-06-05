@@ -54,7 +54,7 @@ export default function Profile() {
 
                 if (status === 200) {
                     setUserData(data);
-                } else {
+                } else if (data.message) {
                     toast.error(data.message);
                 }
             } catch {
@@ -70,7 +70,7 @@ export default function Profile() {
 
                 if (status === 200) {
                     setBlogsData(data);
-                } else {
+                } else if (data.message) {
                     toast.error(data.message);
                 }
             } catch {
@@ -165,7 +165,7 @@ function PageChanger({
                         <PaginationLink href={`${baseurl}`}>first</PaginationLink>
                     </PaginationItem>
                 )}
-                {currentPage > 0 && currentPage <= totalPages && (
+                {currentPage > 0 && currentPage < totalPages && (
                     <PaginationItem>
                         <PaginationLink href={`${baseurl}?page=${currentPage}`} isActive>
                             {currentPage}

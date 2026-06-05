@@ -35,6 +35,9 @@ export default function App() {
                 toast.success('Created');
                 navigate(`/blog/${data.slug}`);
             }
+            else if (data.meessage) {
+                toast.error(data.message);
+            }
         } catch (err) {
             console.log(err);
             toast.error('Error submitting');

@@ -27,8 +27,8 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/blog/:slug" element={<BlogViewer />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/" element={<App />} />
                 <Route element={<RequireAuth />}>
-                    <Route path="/" element={<App />} />
                     <Route path="/blog/new" element={<BlogCreator />} />
                 </Route>
             </Routes>
