@@ -4,6 +4,7 @@ import { prisma } from "../lib/prisma";
 import { fromNodeHeaders } from "better-auth/node";
 import { auth } from "../lib/auth";
 import { logger } from "better-auth";
+import { count } from "node:console";
 
 const slugOptions = {
     replacement: "-", // replace spaces with replacement character, defaults to `-`
@@ -114,5 +115,55 @@ export const viewBlog = async (req: Request, res: Response) => {
     } catch (err) {
         logger.error("ERROR FETCHING BLOG", err);
         return res.status(501).json({ message: "internal server error" });
+    }
+};
+
+export const searchBlogs = async (req: Request, res: Response) => {
+    const q = (req.query.query as string) || "";
+    let page = Number(req.query.page) || 1;
+    if (page < 1) page = 1;
+    let limit = Number(req.query.limit) || 10;
+    if (limit > 20) limit = 20;
+    if (limit < 1) limit = 1;
+    if (!q.trim()) {
+        return res.status(400).json({ message: "search query is required" });
+    }
+    try {
+        const [blogs, totalResult] = await Promise.all([
+            prisma.$queryRaw`
+                SELECT
+                    b.title, b.slug, b."createdAt",
+                    u.name as author_name,
+                    u.image as author_image,
+                    u.username as author_username,
+                    ts_rank(
+                        to_tsvector('english', coalesce(b.title, '') || ' ' || coalesce(b.content, '')),
+                        plainto_tsquery('english', ${q})
+                    ) as rank
+                FROM "Blog" b
+                JOIN "user" u ON u.id = b."authorId"
+                WHERE
+                    to_tsvector('english', coalesce(b.title, '') || ' ' || coalesce(b.content, ''))
+                    @@ plainto_tsquery('english', ${q})
+                ORDER BY rank DESC
+                LIMIT ${limit}
+                OFFSET ${(page - 1) * limit}
+            `,
+            prisma.$queryRaw<[{ count: bigint }]>`
+                SELECT count(*) as count
+                FROM "Blog" b
+                WHERE
+                    to_tsvector('english', coalesce(b.title, '') || ' ' || coalesce(b.content, ''))
+                    @@ plainto_tsquery('english', ${q})
+            `,
+        ]);
+        const total = Number(totalResult[0]?.count) || 0;
+        return res.status(200).json({
+            blogs,
+            totalBlogs : total, 
+        });
+    } catch (err) {
+        logger.error("ERROR SEARCHING BLOGS", err);
+        return res.status(500).json({ message: "internal server error" });
     }
 };
