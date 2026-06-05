@@ -27,7 +27,7 @@ export default function SignUp() {
             return;
         }
         let toastId;
-        const { data, error } = await authClient.signUp.email(
+        await authClient.signUp.email(
             {
                 email: email.trim(),
                 username: username.trim(),
@@ -52,8 +52,6 @@ export default function SignUp() {
                 },
             }
         );
-        if (error) console.log(error);
-        else console.log(data);
     };
 
     return (

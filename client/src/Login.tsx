@@ -20,7 +20,7 @@ export default function SignIn() {
         }
         let toastId;
         if (emailORusername.indexOf('@') >= 0) {
-            const { error } = await authClient.signIn.email(
+            await authClient.signIn.email(
                 {
                     email: emailORusername,
                     password,
@@ -47,12 +47,8 @@ export default function SignIn() {
                     },
                 }
             );
-            if (error) {
-                toast.error('something went wrong...');
-                console.log(error);
-            }
         } else {
-            const { error } = await authClient.signIn.username(
+            await authClient.signIn.username(
                 {
                     username: emailORusername,
                     password,
@@ -79,9 +75,6 @@ export default function SignIn() {
                     },
                 }
             );
-            if (error) {
-                toast.error('something went wrong...');
-            }
         }
     };
 

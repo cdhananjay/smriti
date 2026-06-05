@@ -129,3 +129,7 @@
     @apply font-sans;
     }
 }
+
+body {
+  background-color: var(--muted);
+}

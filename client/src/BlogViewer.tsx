@@ -50,54 +50,54 @@ function BlogViewer() {
 
     return (
         <>
-        <Navbar/>
-        <div className="min-h-screen bg-muted text-foreground">
-            <article className="mx-auto max-w-3xl px-6 py-10">
-                {/* TITLE */}
-                <header className="mb-3">
-                    <h1 className="text-4xl font-bold tracking-tight leading-tight">
-                        {blog.title}
-                    </h1>
-                    {/* date */}
-                    <p className="mt-2 text-sm text-muted-foreground">
-                        {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                            year: 'numeric',
-                            month: 'long',
-                            day: 'numeric',
-                        })}
-                    </p>
+            <Navbar />
+            <div className="min-h-screen bg-muted text-foreground">
+                <article className="mx-auto max-w-3xl px-6 py-10">
+                    {/* TITLE */}
+                    <header className="mb-3">
+                        <h1 className="text-4xl font-bold tracking-tight leading-tight">
+                            {blog.title}
+                        </h1>
+                        {/* date */}
+                        <p className="mt-2 text-sm text-muted-foreground">
+                            {new Date(blog.createdAt).toLocaleDateString('en-US', {
+                                year: 'numeric',
+                                month: 'long',
+                                day: 'numeric',
+                            })}
+                        </p>
 
-                    {/* AUTHOR CARD */}
-                    <div className="mt-6 flex items-center gap-4">
-                        <Link to={`/user/${blog.author.username}`}>
-                            <img
-                                src={blog.author.image || '/person.svg'}
-                                alt={`profile-pic-for-@${blog.author.username}`}
-                                className="h-12 w-12 rounded-full object-cover border border-border"
-                            />
-                        </Link>
-                        <div className="flex flex-col">
+                        {/* AUTHOR CARD */}
+                        <div className="mt-6 flex items-center gap-4">
                             <Link to={`/user/${blog.author.username}`}>
-                                <span className="font-medium text-sm">{blog.author.name}</span>
+                                <img
+                                    src={blog.author.image || '/person.svg'}
+                                    alt={`profile-pic-for-@${blog.author.username}`}
+                                    className="h-12 w-12 rounded-full object-cover border border-border"
+                                />
                             </Link>
-                            <Link to={`/user/${blog.author.username}`}>
-                                <span className="text-sm text-muted-foreground">
-                                    @{blog.author.username}
-                                </span>
-                            </Link>
+                            <div className="flex flex-col">
+                                <Link to={`/user/${blog.author.username}`}>
+                                    <span className="font-medium text-sm">{blog.author.name}</span>
+                                </Link>
+                                <Link to={`/user/${blog.author.username}`}>
+                                    <span className="text-sm text-muted-foreground">
+                                        @{blog.author.username}
+                                    </span>
+                                </Link>
+                            </div>
                         </div>
+                    </header>
+
+                    {/* DIVIDER */}
+                    <div className="mb-6 h-px w-full bg-border" />
+
+                    {/* CONTENT */}
+                    <div id="blog" className="max-w-none">
+                        <Markdown remarkPlugins={[remarkGfm]}>{blog.content}</Markdown>
                     </div>
-                </header>
-
-                {/* DIVIDER */}
-                <div className="mb-6 h-px w-full bg-border" />
-
-                {/* CONTENT */}
-                <div id="blog" className="max-w-none">
-                    <Markdown remarkPlugins={[remarkGfm]}>{blog.content}</Markdown>
-                </div>
-            </article>
-        </div>
+                </article>
+            </div>
         </>
     );
 }

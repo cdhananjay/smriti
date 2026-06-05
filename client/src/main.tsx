@@ -23,7 +23,7 @@ createRoot(document.getElementById('root')!).render(
     <StrictMode>
         <BrowserRouter>
             <Routes>
-                <Route path="/user/:username" element={<Profile/>} />
+                <Route path="/user/:username" element={<Profile />} />
                 <Route path="/blog/:slug" element={<BlogViewer />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
