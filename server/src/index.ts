@@ -8,6 +8,7 @@ import { blogRouter } from "./routes/blog.route";
 import { userRouter } from "./routes/user.route";
 import winston from "winston";
 import { rateLimit } from 'express-rate-limit'
+import { prisma } from "./lib/prisma";
 
 const limiter = rateLimit({
 	windowMs: 15 * 60 * 1000, // 15 minutes
@@ -65,8 +66,39 @@ app.get("/", (req: Request, res: Response) => {
     res.json({ message: "hello world" });
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     logger.info(
         `SERVER STARTED AT PORT ${port}, FRONTEND AT ${process.env.BETTER_AUTH_URL}`,
     );
 });
+
+async function gracefulShutdown(signal : string) {
+  console.log(`Received ${signal}. Starting graceful shutdown...`);
+
+  // Stop accepting new connections
+  server.close(async (err) => {
+    if (err) {
+      logger.error('Error during server close:', err);
+      process.exit(1);
+    }
+
+    try {
+      await prisma.$disconnect();
+
+      logger.info('Shutdown complete');
+      process.exit(0);
+    } catch (error) {
+      logger.error('Shutdown error:', error);
+      process.exit(1);
+    }
+  });
+
+  // Force exit if shutdown takes too long
+  setTimeout(() => {
+    logger.error('Forced shutdown');
+    process.exit(1);
+  }, 10000);
+}
+
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
