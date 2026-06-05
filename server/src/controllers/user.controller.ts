@@ -51,6 +51,11 @@ export const getUserBlogs = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(404).json({ message: "user not found" });
         }
+        const totalBlogs = await prisma.blog.count({
+            where: {
+                authorId: user.id,
+            },
+        });
         const blogs = await prisma.blog.findMany({
             where: {
                 authorId: user.id,
@@ -66,7 +71,7 @@ export const getUserBlogs = async (req: Request, res: Response) => {
                 slug: true,
             },
         });
-        return res.status(200).json({ blogs });
+        return res.status(200).json({ blogs: blogs, totalBlogs: totalBlogs });
     } catch (err) {
         logger.error("ERROR FETCHING USER'S BLOGS", err);
         return res.status(500).json({ message: "internal server error" });
