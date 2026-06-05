@@ -25,7 +25,9 @@ function BlogViewer() {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const { data, status } = await axiosInstance.get(`/blog/view/${slug}`);
+                const { data, status } = await axiosInstance.get(
+                    `/blog/view/${slug}`
+                );
                 if (status == 200) {
                     const blog = data as blogType;
                     setBlog(blog);
@@ -60,11 +62,14 @@ function BlogViewer() {
                         </h1>
                         {/* date */}
                         <p className="mt-2 text-sm text-muted-foreground">
-                            {new Date(blog.createdAt).toLocaleDateString('en-US', {
-                                year: 'numeric',
-                                month: 'long',
-                                day: 'numeric',
-                            })}
+                            {new Date(blog.createdAt).toLocaleDateString(
+                                'en-US',
+                                {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                }
+                            )}
                         </p>
 
                         {/* AUTHOR CARD */}
@@ -78,7 +83,9 @@ function BlogViewer() {
                             </Link>
                             <div className="flex flex-col">
                                 <Link to={`/user/${blog.author.username}`}>
-                                    <span className="font-medium text-sm">{blog.author.name}</span>
+                                    <span className="font-medium text-sm">
+                                        {blog.author.name}
+                                    </span>
                                 </Link>
                                 <Link to={`/user/${blog.author.username}`}>
                                     <span className="text-sm text-muted-foreground">
@@ -94,7 +101,9 @@ function BlogViewer() {
 
                     {/* CONTENT */}
                     <div id="blog" className="max-w-none">
-                        <Markdown remarkPlugins={[remarkGfm]}>{blog.content}</Markdown>
+                        <Markdown remarkPlugins={[remarkGfm]}>
+                            {blog.content}
+                        </Markdown>
                     </div>
                 </article>
             </div>

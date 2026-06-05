@@ -34,8 +34,7 @@ export default function App() {
             if (status === 201) {
                 toast.success('Created');
                 navigate(`/blog/${data.slug}`);
-            }
-            else if (data.meessage) {
+            } else if (data.meessage) {
                 toast.error(data.message);
             }
         } catch (err) {
@@ -51,7 +50,9 @@ export default function App() {
             <div className="mx-auto max-w-4xl px-6 py-10">
                 {/* HEADER */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold tracking-tight">Create new blog</h1>
+                    <h1 className="text-3xl font-bold tracking-tight">
+                        Create new blog
+                    </h1>
                     <p className="text-sm text-muted-foreground mt-1">
                         Write something worth reading
                     </p>
@@ -76,7 +77,11 @@ export default function App() {
 
                 {/* SUBMIT */}
                 <div className="mt-6 flex justify-end">
-                    <Button variant={'default'} onClick={handleSubmit} size={'lg'}>
+                    <Button
+                        variant={'default'}
+                        onClick={handleSubmit}
+                        size={'lg'}
+                    >
                         Publish
                     </Button>
                 </div>
