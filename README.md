@@ -2,6 +2,24 @@
 
 A modern blog platform with full-text search, Markdown editing, and user profiles. Explore blogs on any topic.
 
+### Live Link
+https://smriti-7ubn.onrender.com/
+
+## Demo
+
+<img src="demo.gif" alt="gif displaying demo of the website" width="700"/>
+
+## Todo
+
+- delete blog button
+- image upload support
+- blogs view
+- blog likes
+- following
+- feed
+- profile editing 
+- email verification
+
 ## Features
 
 - **Full-text search** — PostgreSQL-powered `tsvector`/`tsquery` search with ranking and pagination
