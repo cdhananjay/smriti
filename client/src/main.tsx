@@ -13,7 +13,7 @@ import BlogCreator from './BlogCreator.tsx';
 import Profile from './Profile.tsx';
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://localhost:3000/api/',
+    baseURL: (import.meta.env.MODE === "production" ? "/api/" : "http://localhost:3000/api/" ),
     timeout: 10000,
     withCredentials: true,
     validateStatus: status => status < 500,
@@ -27,10 +27,10 @@ createRoot(document.getElementById('root')!).render(
                 <Route path="/blog/:slug" element={<BlogViewer />} />
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
-                <Route path="/" element={<App />} />
                 <Route element={<RequireAuth />}>
                     <Route path="/blog/new" element={<BlogCreator />} />
                 </Route>
+                <Route path="*" element={<App />} />
             </Routes>
         </BrowserRouter>
         <Toaster />

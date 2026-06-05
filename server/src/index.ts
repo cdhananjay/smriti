@@ -9,6 +9,8 @@ import { userRouter } from "./routes/user.route";
 import winston from "winston";
 import { rateLimit } from "express-rate-limit";
 import { prisma } from "./lib/prisma";
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -35,7 +37,7 @@ const logger = winston.createLogger({
     ],
 });
 
-if (process.env.ENV !== "production") {
+if (process.env.MODE !== "production") {
     logger.add(
         new winston.transports.Console({
             format: logFormat,
@@ -62,13 +64,18 @@ app.use(limiter);
 app.use("/api/blog", blogRouter);
 app.use("/api/user", userRouter);
 
-app.get("/", (req: Request, res: Response) => {
-    res.json({ message: "hello world" });
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+app.use(express.static(path.join(__dirname, '../public')));
+
+app.get(/.*/, (req, res) => {
+    res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
 const server = app.listen(port, () => {
     logger.info(
-        `SERVER STARTED AT PORT ${port}, FRONTEND AT ${process.env.BETTER_AUTH_URL}`,
+        `SERVER STARTED AT PORT ${port} & FRONTEND AT ${process.env.BETTER_AUTH_URL}`,
     );
 });
 

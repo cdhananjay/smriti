@@ -1,0 +1,21 @@
+{
+  "name": "smriti",
+  "version": "1.0.0",
+  "description": " A modern blog platform with full-text search, Markdown editing, and user profiles. Explore blogs on any topic.",
+  "homepage": "https://github.com/cdhananjay/smriti#readme",
+  "bugs": {
+    "url": "https://github.com/cdhananjay/smriti/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cdhananjay/smriti.git"
+  },
+  "license": "ISC",
+  "author": "Dhananjay Chavan",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "build": "npm i --prefix server && npm i --prefix client && npm run build --prefix server && npm run build --prefix client",
+    "start": "node server/dist/index.js"
+  }
+}
