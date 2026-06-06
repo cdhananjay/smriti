@@ -11,7 +11,6 @@ https://smriti-7ubn.onrender.com/
 
 ## Todo
 
-- delete blog button
 - image upload support
 - blogs view
 - blog likes
