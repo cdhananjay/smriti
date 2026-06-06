@@ -18,7 +18,6 @@ export default defineConfig({
     },
     build: {
         emptyOutDir: true,
-        outDir: "../server/public",
-        
-    }
+        outDir: '../server/public',
+    },
 });

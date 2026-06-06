@@ -18,6 +18,9 @@ import {
     PaginationNext,
     PaginationPrevious,
 } from '@/components/ui/pagination';
+import { authClient } from './lib/auth-client';
+import { Trash2 } from 'lucide-react';
+import AlertDialogSmall from './components/AlertDialogSmall';
 
 type userDataType = {
     name: string;
@@ -37,6 +40,7 @@ type blogsDataType = {
 };
 
 export default function Profile() {
+    const session = authClient.useSession();
     const { username } = useParams();
     const [searchParams] = useSearchParams();
 
@@ -47,39 +51,59 @@ export default function Profile() {
     const [blogsData, setBlogsData] = useState<blogsDataType | null>(null);
     const [userData, setUserData] = useState<userDataType | null>(null);
 
+    const deleteBlog = async (slug: string) => {
+        const toastId = toast.loading('deleting blog...');
+        try {
+            const { data, status } = await axiosInstance.delete(
+                `/blog/delete/${slug}`
+            );
+            if (status === 200) {
+                toast.dismiss(toastId);
+                toast.success('blog deleted');
+                fetchUserBlogs();
+            } else if (data.message) {
+                toast.error(data.message);
+            }
+        } catch {
+            toast.error('something went wrong...');
+        } finally {
+            toast.dismiss(toastId);
+        }
+    };
+
+    const fetchUserInfo = async () => {
+        try {
+            const { data, status } = await axiosInstance.get(
+                `/user/info/${username}`
+            );
+
+            if (status === 200) {
+                setUserData(data);
+            } else if (data.message) {
+                toast.error(data.message);
+            }
+        } catch {
+            toast.error('Something went wrong while fetching user info');
+        }
+    };
+
+    const fetchUserBlogs = async () => {
+        try {
+            const { data, status } = await axiosInstance.get(
+                `/user/blogs/${username}?page=${page}&limit=${limit}`
+            );
+
+            if (status === 200) {
+                setBlogsData(data);
+            } else if (data.message) {
+                toast.error(data.message);
+            }
+        } catch {
+            toast.error('Something went wrong while fetching user blogs');
+        }
+    };
+
     useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const { data, status } = await axiosInstance.get(
-                    `/user/info/${username}`
-                );
-
-                if (status === 200) {
-                    setUserData(data);
-                } else if (data.message) {
-                    toast.error(data.message);
-                }
-            } catch {
-                toast.error('Something went wrong while fetching user info');
-            }
-        };
-
-        const fetchUserBlogs = async () => {
-            try {
-                const { data, status } = await axiosInstance.get(
-                    `/user/blogs/${username}?page=${page}&limit=${limit}`
-                );
-
-                if (status === 200) {
-                    setBlogsData(data);
-                } else if (data.message) {
-                    toast.error(data.message);
-                }
-            } catch {
-                toast.error('Something went wrong while fetching user blogs');
-            }
-        };
-
         fetchUserInfo();
         fetchUserBlogs();
     }, [username, page, limit]);
@@ -120,7 +144,15 @@ export default function Profile() {
                         {blogsData ? (
                             blogsData.blogs.length > 0 ? (
                                 blogsData.blogs.map(blog => (
-                                    <BlogCard key={blog.slug} {...blog} />
+                                    <BlogCard
+                                        onDelete={deleteBlog}
+                                        showDeleteBtn={
+                                            username ===
+                                            session.data?.user.username
+                                        }
+                                        key={blog.slug}
+                                        {...blog}
+                                    />
                                 ))
                             ) : (
                                 <Card>
@@ -257,36 +289,55 @@ function ProfileInfo({ name, image, createdAt, username }: profileInfoProps) {
     );
 }
 
-function BlogCard({ title, slug, createdAt }: blogDataType) {
+type blogCardProps = {
+    title: string;
+    showDeleteBtn: boolean;
+    slug: string;
+    createdAt: string;
+    onDelete: (slug: string) => any;
+};
+function BlogCard({
+    title,
+    slug,
+    createdAt,
+    showDeleteBtn,
+    onDelete,
+}: blogCardProps) {
     return (
-        <Link to={`/blog/${slug}`}>
-            <Card className="my-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg">
-                <CardContent className="p-5 md:p-6">
-                    <div className="space-y-3">
-                        <h3 className="line-clamp-2 text-lg font-semibold leading-tight md:text-xl">
+        <Card className="group my-5 transition-all duration-200 hover:-translate-y-1 hover:border-primary/50 hover:shadow-lg">
+            <CardContent className="p-5 md:p-6">
+                <div className="flex items-start justify-between gap-4">
+                    <Link to={`/blog/${slug}`} className="flex-1 min-w-0">
+                        <h3 className="line-clamp-2 text-lg font-semibold leading-tight transition-colors group-hover:text-primary md:text-xl">
                             {title}
                         </h3>
+                    </Link>
 
-                        <div className="flex items-center justify-between text-sm text-muted-foreground">
-                            <span>
-                                {new Date(createdAt).toLocaleDateString(
-                                    undefined,
-                                    {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                    }
-                                )}
-                            </span>
+                    {showDeleteBtn && (
+                        <AlertDialogSmall
+                            confirmText="Delete"
+                            titleText="Delete this Blog?"
+                            onConfirm={() => onDelete(slug)}
+                        >
+                            <Trash2 className="my-3" />
+                        </AlertDialogSmall>
+                    )}
+                </div>
 
-                            <span className="font-medium text-primary">
-                                Read →
-                            </span>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
-        </Link>
+                <div className="mt-4 flex items-center justify-between">
+                    <time
+                        dateTime={createdAt}
+                        className="text-sm text-muted-foreground"
+                    >
+                        {new Date(createdAt).toLocaleDateString(undefined, {
+                            year: 'numeric',
+                            month: 'short',
+                            day: 'numeric',
+                        })}
+                    </time>
+                </div>
+            </CardContent>
+        </Card>
     );
 }
 

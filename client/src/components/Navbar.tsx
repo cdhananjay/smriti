@@ -1,42 +1,9 @@
 import { Link, useNavigate } from 'react-router';
-import { Button } from './ui/button';
 import { toast } from 'sonner';
 import { authClient } from '@/lib/auth-client';
 import { LogOut } from 'lucide-react';
-import {
-    AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
-    AlertDialogContent,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogTitle,
-    AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
+import AlertDialogSmall from './AlertDialogSmall';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-
-function AlertDialogSmall({ onConfirm }: { onConfirm: () => any }) {
-    return (
-        <AlertDialog>
-            <AlertDialogTrigger asChild>
-                <Button>
-                    <LogOut />
-                </Button>
-            </AlertDialogTrigger>
-            <AlertDialogContent size="sm">
-                <AlertDialogHeader>
-                    <AlertDialogTitle>Log out of this device?</AlertDialogTitle>
-                </AlertDialogHeader>
-                <AlertDialogFooter>
-                    <AlertDialogCancel> Cancel</AlertDialogCancel>
-                    <AlertDialogAction onClick={onConfirm}>
-                        Logout
-                    </AlertDialogAction>
-                </AlertDialogFooter>
-            </AlertDialogContent>
-        </AlertDialog>
-    );
-}
 
 export default function Navbar() {
     const navigate = useNavigate();
@@ -102,7 +69,14 @@ export default function Navbar() {
                     </Link>
 
                     {session.data?.user && (
-                        <AlertDialogSmall onConfirm={handleSignOut} />
+                        <AlertDialogSmall
+                            confirmText="Logout"
+                            titleText="Logout of this device?"
+                            onConfirm={handleSignOut}
+                        >
+                            {' '}
+                            <LogOut />{' '}
+                        </AlertDialogSmall>
                     )}
                 </div>
             </div>

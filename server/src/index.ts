@@ -9,8 +9,8 @@ import { userRouter } from "./routes/user.route";
 import winston from "winston";
 import { rateLimit } from "express-rate-limit";
 import { prisma } from "./lib/prisma";
-import path from 'path';
-import { fileURLToPath } from 'url';
+import path from "path";
+import { fileURLToPath } from "url";
 
 const limiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutes
@@ -67,10 +67,10 @@ app.use("/api/user", userRouter);
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, "../public")));
 
 app.get(/.*/, (req, res) => {
-    res.sendFile(path.join(__dirname, '../public/index.html'));
+    res.sendFile(path.join(__dirname, "../public/index.html"));
 });
 
 const server = app.listen(port, () => {

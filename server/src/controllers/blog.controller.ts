@@ -52,7 +52,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
     const slug = req.params.slug;
 
     if (!slug) {
-        return res.json(400).json({ message: "blog id not provided" });
+        return res.json(400).json({ message: "blog slug not provided" });
     }
 
     const session = await auth.api.getSession({
@@ -67,7 +67,7 @@ export const deleteBlog = async (req: Request, res: Response) => {
             },
         });
         if (!blog) {
-            return res.status(400).json({ message: "invalid blog id" });
+            return res.status(400).json({ message: "invalid blog slug" });
         }
         await prisma.blog.delete({
             where: {
@@ -160,7 +160,7 @@ export const searchBlogs = async (req: Request, res: Response) => {
         const total = Number(totalResult[0]?.count) || 0;
         return res.status(200).json({
             blogs,
-            totalBlogs : total, 
+            totalBlogs: total,
         });
     } catch (err) {
         logger.error("ERROR SEARCHING BLOGS", err);

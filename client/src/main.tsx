@@ -13,7 +13,10 @@ import BlogCreator from './BlogCreator.tsx';
 import Profile from './Profile.tsx';
 
 export const axiosInstance = axios.create({
-    baseURL: (import.meta.env.MODE === "production" ? "/api/" : "http://localhost:3000/api/" ),
+    baseURL:
+        import.meta.env.MODE === 'production'
+            ? '/api/'
+            : 'http://localhost:3000/api/',
     timeout: 10000,
     withCredentials: true,
     validateStatus: status => status < 500,
