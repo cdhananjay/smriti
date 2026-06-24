@@ -3,7 +3,7 @@
 A modern blog platform with full-text search, Markdown editing, and user profiles. Explore blogs on any topic.
 
 ### Live Link
-https://smriti-7ubn.onrender.com/
+https://smriti-blog.up.railway.app/
 
 ## Demo
 
